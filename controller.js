@@ -72,7 +72,7 @@ const postScan = async (req, res, next) => {
     }
 
     const browser = await puppeteer
-      .launch({ headless: true })
+      .launch({ headless: true, args: ["--no-sandbox"] })
       .then((browser) => browser.createIncognitoBrowserContext());
     const page = await browser.newPage();
 
@@ -188,6 +188,8 @@ const postScan = async (req, res, next) => {
         alerts: companyAlerts,
       });
     }
+
+    await browser.close();
 
     const book = XLSX.utils.book_new();
     const columns = ["ID", "Company", "Website", "Alerts"];
