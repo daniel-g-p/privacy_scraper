@@ -13,6 +13,10 @@ app.use(express.static(config.dirname + "/public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.get("/health-check", (req, res) => {
+  return res.status(200).json({ id: Date.now() });
+});
+
 app.get("/", controller.getHome);
 
 app.get("/list", controller.getList);
