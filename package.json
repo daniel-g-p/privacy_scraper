@@ -5,11 +5,13 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node controllers.js"
+    "start": "node index.js"
   },
   "author": "Daniel Giustini Perez",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "puppeteer": "^19.7.2",
     "xlsx": "^0.18.5"
   }

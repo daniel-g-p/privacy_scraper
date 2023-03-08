@@ -1,4 +1,9 @@
+import { config } from "dotenv";
+
+config();
+
 export default {
+  port: process.env.PORT,
   privacy_policy_link_keywords: ["privacy", "datenschutz"],
   flagged_cookie_names: ["_ga"],
   flagged_privacy_policy_keywords: [
