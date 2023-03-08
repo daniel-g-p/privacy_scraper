@@ -1,11 +1,9 @@
 import express from "express";
-import xlsx from "xlsx";
 
 import config from "./config.js";
-
 import middleware from "./middleware.js";
-
 import controller from "./controller.js";
+import cron from "./cron.js";
 
 const app = express();
 
@@ -17,17 +15,31 @@ app.use(express.json());
 
 app.get("/", controller.getHome);
 
-app.get("/list-template", controller.getListTemplate);
+app.get("/list", controller.getList);
 
 app.post("/list", middleware.uploadFile("list"), controller.postList);
 
-app.post("/start", middleware.uploadFile("list"), controller.postStart);
+app.post("/scan", controller.postScan);
 
 app.get("/output/:filename", controller.getOutput);
 
+app.use((req, res, next) => {
+  next(new Error(404));
+});
+
+app.use((error, req, res, next) => {
+  if (config.nodeEnv === "development") {
+    console.log(error);
+  }
+  return res.redirect("/");
+});
+
 const init = () => {
   app.listen(config.port, () => {
-    console.log("Running on http://localhost:" + config.port);
+    cron();
+    if (config.nodeEnv === "development") {
+      console.log("Running on http://localhost:" + config.port);
+    }
   });
 };
 

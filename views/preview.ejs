@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Privacy Scraper</title>
+    <title>Privacy Website Scanner</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
@@ -13,10 +13,12 @@
   <body>
     <section class="section">
       <div class="container">
-        <h1 class="title">DataGuard Website Scanner - Preview</h1>
-        <p class="subtitle">#ProtectThePeopleBehindTheData</p>
+        <h1 class="title">Privacy Website Scanner - Preview</h1>
         <div class="box">
-          <p class="mb-4">The following websites will be scanned.</p>
+          <p class="mb-4">
+            The following websites will be scanned for privacy and cookie
+            issues.
+          </p>
           <div class="table-container">
             <table id="items" class="table">
               <thead>
@@ -31,7 +33,11 @@
                 <tr>
                   <td><%= item.id %></td>
                   <td><%= item.name %></td>
-                  <td><%= item.website %></td>
+                  <td>
+                    <a href="<%= item.website %>" target="_blank"
+                      ><%= item.website %></a
+                    >
+                  </td>
                 </tr>
                 <% } %>
               </tbody>
@@ -44,7 +50,7 @@
         </div>
       </div>
     </section>
-    <div id="success" class="modal">
+    <div id="modal" class="modal">
       <div class="modal-background"></div>
       <div class="modal-content">
         <div class="box">

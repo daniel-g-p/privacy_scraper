@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Privacy Scraper</title>
+    <title>Privacy Website Scanner</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
@@ -13,26 +13,43 @@
   <body>
     <section class="section">
       <div class="container">
-        <h1 class="title">DataGuard Website Scanner - Home</h1>
-        <p class="subtitle">#ProtectThePeopleBehindTheData</p>
-        <div class="container">
-          <div class="mb-4">
-            <a href="/list-template" class="button is-link is-medium"
-              >Download list template</a
-            >
+        <h1 class="title">Privacy Website Scanner - Home</h1>
+        <div class="box content">
+          <p>
+            Welcome to the Privacy Website Scanner. This tool helps you
+            automatically scan websites for the following privacy and cookie
+            implementation issues:
+          </p>
+          <ul>
+            <li>Is the EU-US Privacy Shield still mentioned?</li>
+            <li>Is there a reference to Google Analytics?</li>
+            <li>Is there a reference to Google Fonts?</li>
+            <li>Is a DPO indicated in the privacy policy?</li>
+            <li>Are any cookies enabled automatically?</li>
+          </ul>
+          <p>
+            Please download the Excel template, list up to 100 websites
+            (including https:// or http://), and upload the file to run a scan.
+          </p>
+          <div class="is-flex mt-5">
+            <div class="mr-2">
+              <a href="/list" method="get" class="button is-link is-medium"
+                >1. Download template</a
+              >
+            </div>
+            <form action="/list" method="post" enctype="multipart/form-data">
+              <label for="upload" class="button is-danger is-medium"
+                >2. Upload list for scan</label
+              >
+              <input
+                id="upload"
+                class="is-sr-only"
+                name="list"
+                type="file"
+                accept="xlsx"
+              />
+            </form>
           </div>
-          <form action="/list" method="post" enctype="multipart/form-data">
-            <label for="upload" class="button is-danger is-medium"
-              >Upload list for scan</label
-            >
-            <input
-              id="upload"
-              class="is-sr-only"
-              name="list"
-              type="file"
-              accept="xlsx"
-            />
-          </form>
         </div>
       </div>
     </section>

@@ -5,8 +5,10 @@ import { fileURLToPath } from "url";
 config();
 
 export default {
-  dirname: dirname(fileURLToPath(import.meta.url)),
+  nodeEnv: process.env.NODE_ENV,
   port: process.env.PORT,
+  
+  dirname: dirname(fileURLToPath(import.meta.url)),
   urlRegex:
     /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/,
 
