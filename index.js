@@ -23,6 +23,8 @@ app.post("/list", middleware.uploadFile("list"), controller.postList);
 
 app.post("/start", middleware.uploadFile("list"), controller.postStart);
 
+app.get("/output/:filename", controller.getOutput);
+
 const init = () => {
   app.listen(config.port, () => {
     console.log("Running on http://localhost:" + config.port);

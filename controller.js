@@ -1,3 +1,5 @@
+import crypto from "crypto";
+import fs from "fs";
 import puppeteer from "puppeteer";
 import XLSX from "xlsx";
 
@@ -47,6 +49,7 @@ const postStart = async (req, res) => {
       ? true
       : false;
   });
+
   const browser = await puppeteer
     .launch({ headless: true })
     .then((browser) => browser.createIncognitoBrowserContext());
@@ -96,15 +99,11 @@ const postStart = async (req, res) => {
         }
       }
 
-      const privacyOutput = privacyUrls.length
+      const companyAlerts = privacyUrls.length
         ? []
-        : [
-            {
-              url: company.website,
-              alerts: ["Didn't find any privacy-related URLs"],
-            },
-          ];
-      if (privacyOutput.length === 0) {
+        : ["Didn't find any privacy-related URLs on " + company.website];
+
+      if (companyAlerts.length === 0) {
         for (const url of privacyUrls) {
           const navigationOk = await page
             .goto(url)
@@ -125,7 +124,7 @@ const postStart = async (req, res) => {
                 return item.keywords.some((keyword) => text.includes(keyword));
               })
               .map((item) => {
-                return "Found " + item.label + " on " + url;
+                return "Found " + item.name + " on " + url;
               });
             const expectedNotFound = config.expectedPrivacyKeywords
               .filter((item) => {
@@ -134,189 +133,71 @@ const postStart = async (req, res) => {
                 });
               })
               .map((item) => {
-                return "Didn't find " + item.label + " on " + url;
+                return "Didn't find " + item.name + " on " + url;
               });
             const alerts = [...flaggedFound, ...expectedNotFound];
-            if (alerts.length) {
-              privacyOutput.push({ url, alerts });
+            for (const alert of alerts) {
+              companyAlerts.push(alert);
             }
           }
         }
       }
 
-      const cookieOutput = [];
       for (const cookie of cookies) {
         const isThirdParty = !cookie.domain.includes(domain);
-        const navigationOk = await page
-          .goto("https://cookiedatabase.org/?s=" + cookie.name)
-          .then(() => true)
-          .catch(() => false);
-        if (navigationOk) {
-          const cookiesInformation = [];
-          const searchResults = await page.$$("article.elementor-post");
-          for (const result of searchResults) {
-            const h3 = await result.$("h3");
-            const name = h3
-              ? await h3
-                  .evaluate((el) => el.textContent)
-                  .then((res) => {
-                    return res && typeof res === "string" ? res.trim() : "";
-                  })
-                  .catch(() => "")
-              : "";
-            const a = await result.$("a");
-            const url = a
-              ? await a
-                  .evaluate((el) => el.getAttribute("href"))
-                  .then((res) => {
-                    return res && config.urlRegex.test(res) ? res : "";
-                  })
-                  .catch(() => "")
-              : "";
-            if (name && url) {
-              cookiesInformation.push({ name, url });
-            }
-          }
-          const otherPages = await page.$$("nav.elementor-pagination > a");
-          const otherPageUrls = [];
-          for (const otherPage of otherPages) {
-            const url = await otherPage
-              .evaluate((el) => el.getAttribute("href"))
-              .then((res) => {
-                return res && config.urlRegex.test(res) ? res : "";
-              })
-              .catch(() => "");
-            if (url) {
-              otherPageUrls.push(url);
-            }
-          }
-          for (const url of otherPageUrls) {
-            const navigationOk = await page
-              .goto(url)
-              .then(() => true)
-              .catch(() => false);
-            if (navigationOk) {
-              const searchResults = await page.$$("article.elementor-post");
-              for (const result of searchResults) {
-                const h3 = await result.$("h3");
-                const name = h3
-                  ? await h3
-                      .evaluate((el) => el.textContent)
-                      .then((res) => {
-                        return res && typeof res === "string" ? res.trim() : "";
-                      })
-                      .catch(() => "")
-                  : "";
-                const a = await result.$("a");
-                const url = a
-                  ? await a
-                      .evaluate((el) => el.getAttribute("href"))
-                      .then((res) => {
-                        return res && config.urlRegex.test(res) ? res : "";
-                      })
-                      .catch(() => "")
-                  : "";
-                if (name && url) {
-                  cookiesInformation.push({ name, url });
-                }
-              }
-            }
-          }
-          const match = cookiesInformation.find((item) => {
-            return item.name.trim().toLowerCase() ===
-              cookie.name.trim().toLowerCase()
-              ? true
-              : false;
-          });
-          if (match) {
-            const navigationOk = await page
-              .goto(match.url)
-              .then(() => true)
-              .catch(() => false);
-            if (navigationOk) {
-              const body = await page.$("body");
-              const text = body
-                ? await body
-                    .evaluate((el) => el.textContent)
-                    .then((res) => {
-                      return res && typeof res === "string" ? res : "";
-                    })
-                    .catch(() => "")
-                : "";
-              const service = text
-                .split("by:")[1]
-                .split("functionality is:")[0]
-                .trim()
-                .split("\n")[0];
-              const purpose = text
-                .split("functionality is:")[1]
-                .split("purpose is:")[0]
-                .trim()
-                .split("\n")[0];
-              const category = text
-                .split("purpose is:")[1]
-                .split("Expiration period:")[0]
-                .trim()
-                .split("\n")[0];
-              cookieOutput.push({
-                name: cookie.name,
-                domain: cookie.domain,
-                isThirdParty,
-                service,
-                purpose,
-                category,
-              });
-            } else {
-              cookieOutput.push({
-                name: cookie.name,
-                domain: cookie.domain,
-                isThirdParty,
-                service: "",
-                purpose: "",
-                category: "",
-              });
-            }
-          }
-        }
+        const alert =
+          'Automatic cookie "' +
+          cookie.name +
+          '" from domain "' +
+          cookie.domain +
+          `"` +
+          (isThirdParty ? " (3rd party)" + "" : "");
+        companyAlerts.push(alert);
       }
 
       data.push({
         id: company.id,
         name: company.name,
         website: company.website,
-        privacy: privacyOutput,
-        cookies: cookieOutput,
+        alerts: companyAlerts,
       });
     } catch (error) {
       console.log(error);
     }
   }
 
-  console.log(data)
+  const book = XLSX.utils.book_new();
+  const columns = ["ID", "Company", "Website", "Alert"];
+  const rows = data.map((item) => {
+    return [item.id, item.name, item.website, item.alerts.join(", ")];
+  });
+  const sheet = XLSX.utils.aoa_to_sheet([columns, ...rows]);
+  XLSX.utils.book_append_sheet(book, sheet, "Sheet1");
 
-//   const book = XLSX.utils.book_new();
-//   const columns = ["Company", "Website", "Alert"];
-//   const rows = [];
-//   for (const company of data) {
-//     for (const privacyItem of company.privacy) {
-//       for (const privacyAlert of privacyItem.alerts) {
-//         rows.push({
-//           id: company.id,
-//           name: company.name,
-//           website: company.website,
-//           alert: privacyAlert,
-//         });
-//       }
-//     }
-//     for (const cookieItem of company.cookies) {
-//         for (const cookie of cookieItem)
-//     }
-//     const privacyAlerts = item.privacy;
-//     const rows = data.map((dataItem) => {
-//       return [...dataItem.privacy.map((privacyItem) => privacy)];
-//     });
-//   }
-//   const sheet = XLSX.utils.aoa_to_sheet(data);
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  const day = today.getDate();
+
+  const yearText = year.toString();
+  const monthText = month < 10 ? "0" + month : month.toString();
+  const dayText = day < 10 ? "0" + day : day.toString();
+  const hash = crypto.randomBytes(2).toString("hex");
+
+  const filename =
+    "privacy-scan-" + yearText + monthText + dayText + "-" + hash;
+  const filepath = config.dirname + "/output/" + filename + ".xlsx";
+  XLSX.writeFile(book, filepath);
+
+  return res.status(200).json({ filename });
 };
 
-export default { getHome, getListTemplate, postList, postStart };
+const getOutput = (req, res) => {
+  const { filename } = req.params;
+  const filepath = config.dirname + "/output/" + filename + ".xlsx";
+  return res.sendFile(filepath, () => {
+    fs.unlinkSync(filepath);
+  });
+};
+
+export default { getHome, getListTemplate, postList, postStart, getOutput };

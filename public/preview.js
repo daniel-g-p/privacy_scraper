@@ -1,6 +1,9 @@
 const confirmButton = document.querySelector("#confirm");
+const cancelButton = document.querySelector("#cancel");
 
 confirmButton.addEventListener("click", () => {
+  confirmButton.classList.add("is-loading");
+  cancelButton.setAttribute("disabled", true);
   const rows = document.querySelectorAll("#items tbody tr");
   const items = [];
   for (const row of rows) {
@@ -10,7 +13,6 @@ confirmButton.addEventListener("click", () => {
     const website = cells[2].textContent;
     items.push({ id, name, website });
   }
-  console.log(items);
   fetch("/start", {
     method: "post",
     headers: {
@@ -18,10 +20,21 @@ confirmButton.addEventListener("click", () => {
     },
     body: JSON.stringify(items),
   })
+    .then((res) => res.json())
     .then((res) => {
       console.log(res);
     })
+    // .then((url) => {
+    //   const a = document.createElement("a");
+    //   a.href = url;
+    //   a.download = "outputfile.xlsx";
+    //   a.click();
+    // })
     .catch((res) => {
       console.log(res);
+    })
+    .finally(() => {
+      confirmButton.classList.remove("is-loading");
+      cancelButton.setAttribute("disabled", false);
     });
 });

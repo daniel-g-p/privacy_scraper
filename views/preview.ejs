@@ -5,30 +5,57 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Privacy Scraper</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
   </head>
   <body>
-    <h1>Preview</h1>
-    <div>
-      <button id="confirm">Confirm</button>
+    <section class="section">
+      <div class="container">
+        <h1 class="title">DataGuard Website Scanner - Preview</h1>
+        <p class="subtitle">#ProtectThePeopleBehindTheData</p>
+        <div class="box">
+          <p class="mb-4">The following websites will be scanned.</p>
+          <div class="table-container">
+            <table id="items" class="table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Company</th>
+                  <th>Website</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for (const item of items) { %>
+                <tr>
+                  <td><%= item.id %></td>
+                  <td><%= item.name %></td>
+                  <td><%= item.website %></td>
+                </tr>
+                <% } %>
+              </tbody>
+            </table>
+            <div class="buttons are-medium">
+              <button id="confirm" class="button is-danger">Confirm</button>
+              <a id="cancel" href="/" class="button">Cancel</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div id="success" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="box">
+          <p class="mb-4">The website scan has been completed.</p>
+          <a id="download" href="#" class="button is-link is-medium"
+            >Download scan</a
+          >
+        </div>
+      </div>
+      <a href="/" class="modal-close is-large" aria-label="close"></a>
     </div>
-    <table id="items">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Company</th>
-          <th>Website</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% for (const item of items) { %>
-        <tr>
-          <td><%= item.id %></td>
-          <td><%= item.name %></td>
-          <td><%= item.website %></td>
-        </tr>
-        <% } %>
-      </tbody>
-    </table>
     <script src="preview.js"></script>
   </body>
 </html>

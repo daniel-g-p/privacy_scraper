@@ -11,7 +11,6 @@ export default {
     /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/,
 
   privacyUrlKeywords: ["privacy", "datenschutz"],
-  flagged_cookie_names: ["_ga"],
   flaggedPrivacyKeywords: [
     { name: "Google Analytics", keywords: ["Google Analytics"] },
     { name: "Google Fonts", keywords: ["Google Fonts"] },
@@ -19,7 +18,7 @@ export default {
   ],
   expectedPrivacyKeywords: [
     {
-      label: "DPO",
+      name: "DPO",
       keywords: [
         "Datenschutzbeauftragter",
         "Datenschutzbeauftragte",
