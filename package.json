@@ -1,0 +1,16 @@
+{
+  "name": "website_scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node controllers.js"
+  },
+  "author": "Daniel Giustini Perez",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^19.7.2",
+    "xlsx": "^0.18.5"
+  }
+}
