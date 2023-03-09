@@ -16,7 +16,7 @@ const getHome = (req, res, next) => {
 const getList = (req, res, next) => {
   try {
     const filePath = config.dirname + "/files/privacy_scan_template.xlsx";
-    return res.sendFile(filePath);
+    return res.download(filePath, "privacy_scan_template.xlsx");
   } catch (error) {
     next(error);
   }
@@ -72,7 +72,7 @@ const postScan = async (req, res, next) => {
     }
 
     const browser = await puppeteer
-      .launch({ headless: true, args: ["--no-sandbox"] })
+      .launch({ headless: true })
       .then((browser) => browser.createIncognitoBrowserContext());
     const page = await browser.newPage();
 
