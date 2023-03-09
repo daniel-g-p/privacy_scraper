@@ -28,8 +28,9 @@ confirmButton.addEventListener("click", () => {
       downloadButton.setAttribute("href", "/output/" + res.filename);
       modal.classList.add("is-active");
     })
-    .catch((res) => {
-      console.log(res);
+    .catch((error) => {
+      console.error(error);
+      alert("Something went wrong, please try again...");
     })
     .finally(() => {
       confirmButton.classList.remove("is-loading");
