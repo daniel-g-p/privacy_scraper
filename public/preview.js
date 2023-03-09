@@ -16,7 +16,6 @@ confirmButton.addEventListener("click", () => {
     const website = cells[2].textContent.trim();
     items.push({ id, name, website });
   }
-  console.log(items);
   fetch("/scan", {
     method: "post",
     headers: {

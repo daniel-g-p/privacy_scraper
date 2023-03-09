@@ -21,34 +21,37 @@
             implementation issues:
           </p>
           <ul>
-            <li>Is the EU-US Privacy Shield still mentioned?</li>
+            <li>Are any cookies enabled automatically?</li>
+            <li>Is a DPO indicated in the privacy policy?</li>
             <li>Is there a reference to Google Analytics?</li>
             <li>Is there a reference to Google Fonts?</li>
-            <li>Is a DPO indicated in the privacy policy?</li>
-            <li>Are any cookies enabled automatically?</li>
+            <li>Is the EU-US Privacy Shield still mentioned?</li>
           </ul>
           <p>
             Please download the Excel template, list up to 100 websites
             (including https:// or http://), and upload the file to run a scan.
           </p>
-          <div class="is-flex mt-5">
-            <div class="mr-2">
-              <a href="/list" method="get" class="button is-link is-medium"
-                >1. Download template</a
+          <div class="buttons">
+            <a href="/list" method="get" class="button is-link is-medium"
+              >1. Download template</a
+            >
+            <label for="upload" class="button is-danger is-medium"
+              ><span>2. Upload list for scan</span>
+              <form
+                action="/list"
+                method="post"
+                enctype="multipart/form-data"
+                class="invisible"
               >
-            </div>
-            <form action="/list" method="post" enctype="multipart/form-data">
-              <label for="upload" class="button is-danger is-medium"
-                >2. Upload list for scan</label
-              >
-              <input
-                id="upload"
-                class="is-sr-only"
-                name="list"
-                type="file"
-                accept="xlsx"
-              />
-            </form>
+                <input
+                  id="upload"
+                  class="is-sr-only"
+                  name="list"
+                  type="file"
+                  accept="xlsx"
+                />
+              </form>
+            </label>
           </div>
         </div>
       </div>
