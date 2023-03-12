@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import fs from "fs";
-import puppeteer from "puppeteer";
+import puppeteer, { BrowserContext } from "puppeteer";
 import XLSX from "xlsx";
 
 import config from "./config.js";
@@ -71,10 +71,12 @@ const postScan = async (req, res, next) => {
       throw new Error(400);
     }
 
-    const browser = await puppeteer
-      .launch({ headless: true })
-      .then((browser) => browser.createIncognitoBrowserContext());
-    const page = await browser.newPage();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox"],
+    });
+    const browserContext = await browser.createIncognitoBrowserContext();
+    const page = await browserContext.newPage();
 
     const data = [];
 
@@ -189,6 +191,7 @@ const postScan = async (req, res, next) => {
       });
     }
 
+    await browserContext.close();
     await browser.close();
 
     const book = XLSX.utils.book_new();

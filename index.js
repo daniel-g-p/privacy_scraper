@@ -32,18 +32,14 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-  if (config.nodeEnv === "development") {
-    console.log(error);
-  }
+  console.log(error);
   return res.redirect("/");
 });
 
 const init = () => {
   app.listen(config.port, () => {
     cron();
-    if (config.nodeEnv === "development") {
-      console.log("Running on http://localhost:" + config.port);
-    }
+    console.log("Running on http://localhost:" + config.port);
   });
 };
 
