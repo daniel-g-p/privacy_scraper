@@ -16,9 +16,8 @@
         <h1 class="title">Privacy Website Scanner - Home</h1>
         <div class="box content">
           <p>
-            Welcome to the Privacy Website Scanner. This tool helps you
-            automatically scan websites for the following privacy and cookie
-            implementation issues:
+            This tool helps you automatically scan websites for the following
+            privacy and cookie implementation issues:
           </p>
           <ul>
             <li>Are any cookies enabled automatically?</li>
@@ -27,32 +26,39 @@
             <li>Is there a reference to Google Fonts?</li>
             <li>Is the EU-US Privacy Shield still mentioned?</li>
           </ul>
-          <p>
-            Please download the Excel template, list up to 100 websites
-            (including https:// or http://), and upload the file to run a scan.
-          </p>
-          <div class="buttons">
-            <a href="/list" method="get" class="button is-link is-medium"
-              >1. Download template</a
-            >
-            <label for="upload" class="button is-danger is-medium"
-              ><span>2. Upload list for scan</span>
-              <form
-                action="/list"
-                method="post"
-                enctype="multipart/form-data"
-                class="invisible"
-              >
-                <input
-                  id="upload"
-                  class="is-sr-only"
-                  name="list"
-                  type="file"
-                  accept="xlsx"
-                />
-              </form>
-            </label>
-          </div>
+          <article class="message is-info">
+            <div class="message-header">
+              <p>How to use the Privacy Website Scanner</p>
+            </div>
+            <div class="message-body">
+              <p>1. Download the Excel list template</p>
+              <p>2. List up to 100 websites (including https:// or http://)</p>
+              <p>3. Upload the list</p>
+              <p>4. Confirm and start the scan on the next page</p>
+              <div class="buttons">
+                <a href="/list" method="get" class="button is-link is-medium"
+                  >1. Download template</a
+                >
+                <label for="upload" class="button is-danger is-medium"
+                  ><span>2. Upload list for scan</span>
+                  <form
+                    action="/list"
+                    method="post"
+                    enctype="multipart/form-data"
+                    class="invisible"
+                  >
+                    <input
+                      id="upload"
+                      class="is-sr-only"
+                      name="list"
+                      type="file"
+                      accept="xlsx"
+                    />
+                  </form>
+                </label>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
     </section>

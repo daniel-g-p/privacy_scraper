@@ -28,7 +28,12 @@ app.post("/scan", controller.postScan);
 app.get("/output/:filename", controller.getOutput);
 
 app.use((req, res, next) => {
-  next(new Error("404 @ " + req.originalUrl));
+  const url = req.originalUrl;
+  if (url === "/favicon.ico") {
+    return;
+  } else {
+    next(new Error("404 @ " + req.originalUrl));
+  }
 });
 
 app.use((error, req, res, next) => {

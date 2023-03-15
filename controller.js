@@ -16,7 +16,14 @@ const getHome = (req, res, next) => {
 const getList = (req, res, next) => {
   try {
     const filePath = config.dirname + "/files/privacy_scan_template.xlsx";
-    return res.download(filePath, "privacy_scan_template.xlsx");
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const fileDate =
+      year + (month < 10 ? "0" + month : month) + (day < 10 ? "0" + day : day);
+    const fileName = fileDate + "-privacy_scan_template.xlsx";
+    return res.download(filePath, fileName);
   } catch (error) {
     next(error);
   }
